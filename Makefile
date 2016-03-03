@@ -1,12 +1,19 @@
 IMAGE:=ucp-install
 CONTAINER:=$(IMAGE)-test
 
+uninstall: build
+		#--pid host --uts host --ipc host --net host \
+	docker run --rm -it \
+		--name $(CONTAINER) \
+		-v "/:/host" \
+		$(IMAGE) uninstall
+
 install: build
 		#--pid host --uts host --ipc host --net host \
 	docker run --rm -it \
 		--name $(CONTAINER) \
 		-v "/:/host" \
-		$(IMAGE)
+		$(IMAGE) 
 
 ps:
 	docker exec -it $(CONTAINER) ps aux
@@ -24,4 +31,5 @@ sh: build
 		$(IMAGE) sh
 
 build:
-	docker build -t $(IMAGE) .
+	#docker pull $(shell grep FROM Dockerfile | sed "s/FROM//")
+	docker build --pull -t $(IMAGE) .

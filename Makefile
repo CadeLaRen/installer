@@ -24,4 +24,10 @@ sh: build
 		$(IMAGE) sh
 
 build:
-	docker build -t $(IMAGE) .
+	docker build --pull -t $(IMAGE) .
+
+hub:
+	docker run --rm -it \
+		--name $(CONTAINER) \
+		-v "/:/host" \
+			svendowideit/installer

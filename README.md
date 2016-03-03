@@ -12,10 +12,10 @@ to your project that looks like:
 FROM svendowideit/installer
 MAINTAINER You <You@your.org>
 
-ADD install.sh /install.install.sh
+ADD install /install/install
 ```
 
-And then write an `install.sh` that runs whatever you need to run on the host you're installing on.
+And then write an `/install/install` script or executable that runs whatever you need to run on the host you're installing on.
 
 ```
 #!/bin/sh
@@ -31,11 +31,11 @@ wget https://your.org/docker-compose.yml
 docker-compose up
 ```
 
-You can also over-ride `/install/help.sh`, which will output whenever the installer container fails to
+You can also over-ride `/install/help`, which will output whenever the installer container fails to
 find a matching script, or is missing some cmdline options.
 
 You can add more commands, such as `uninstall`, `test` etc by adding more scripts into the `/install` directory. 
-For example, `/install/test.sh` would be run using `docker run --rm -v "/:/host" svendowideit/installer test`.
+For example, `/install/test` would be run using `docker run --rm -v "/:/host" svendowideit/installer test`.
 
 ## Interesting results
 

@@ -6,6 +6,6 @@ echo ""
 echo "   docker run --rm -it -v \"/:/host\" <installer-image> $@"
 echo ""
 echo " this installer supports the following commands:"
-ls /install | sed "s/\(.*\).sh/      \1/g"
+ls /install | sed "s/\(.*\)/      \1/g"
 
 

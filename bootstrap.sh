@@ -3,7 +3,7 @@
 set -e
 
 if [[ ! -d "/host" ]]; then
-	/install/help.sh $@
+	/install/help $@
 	exit 255
 fi
 
@@ -12,10 +12,12 @@ if [[ -z $CMD ]]; then
 	CMD="install"
 fi
 
-CMDLINE="/install/$CMD.sh"
+CMDLINE="/install/$CMD"
 if [[ ! -e "$CMDLINE" ]]; then
-	echo "No command '$CMD' found"
-	/install/help.sh $@
+	echo ""
+	echo "ERROR: No command '$CMD' found"
+	echo ""
+	/install/help $@
 	exit 254
 fi
 

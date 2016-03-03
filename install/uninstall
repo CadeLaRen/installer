@@ -2,4 +2,8 @@
 
 set -e
 
-docker run --rm -it uninstall $@
+docker pull docker/ucp
+docker run --rm -it \
+	--name ucp \
+	-v "/var/run/docker.sock:/var/run/docker.sock" \
+	docker/ucp uninstall  --interactive $@

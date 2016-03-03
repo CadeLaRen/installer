@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+echo "UCP containers:"
+docker ps -a --format "{{.Image }} {{.Names}}" | grep ucp | sed "s/.* //"
+
+echo
+echo "UCP images"
+docker images -a --format "{{.Repository}}:{{.Tag}}" | grep ucp

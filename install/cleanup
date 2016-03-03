@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+echo "removing all UCP containers"
+docker ps -a --format "{{.Image }} {{.Names}}" | grep ucp | sed "s/.* //"
+docker rm $(docker ps -a --format "{{.Image }} {{.Names}}" | grep ucp | sed "s/.* //") || true
+
+echo "removing all UCP images"
+docker images -a --format "{{.Repository}}:{{.Tag}}" | grep ucp
+docker rmi $(docker images -a --format "{{.Repository}}:{{.Tag}}" | grep ucp) || true

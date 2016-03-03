@@ -1,4 +1,4 @@
-# installer
+# Installation in a container
 
 Instead of mounting `/var/run/docker.sock` and a `docker` client binary into an installer container,
 we can use `host` namespacing, and chroot into a bind-mount of the host root dir.
@@ -31,7 +31,13 @@ wget https://your.org/docker-compose.yml
 docker-compose up
 ```
 
-## interesting results
+You can also over-ride `/install/help.sh`, which will output whenever the installer container fails to
+find a matching script, or is missing some cmdline options.
+
+You can add more commands, such as `uninstall`, `test` etc by adding more scripts into the `/install` directory. 
+For example, `/install/test.sh` would be run using `docker run --rm -v "/:/host" svendowideit/installer test`.
+
+## Interesting results
 
 ### running mount -o rbind inside the container fails.
 

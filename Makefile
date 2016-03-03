@@ -1,4 +1,4 @@
-IMAGE:=install
+IMAGE:=ucp-install
 CONTAINER:=$(IMAGE)-test
 
 install: build

@@ -2,8 +2,10 @@
 
 set -e
 
-docker pull docker/ucp
-docker run --rm -it \
-	--name ucp \
-	-v "/var/run/docker.sock:/var/run/docker.sock" \
-	docker/ucp uninstall  --interactive $@
+run () {
+	docker pull svendowideit/installer:$1
+	docker run --rm -it -v "/:/host" svendowideit/installer:$@
+}
+
+run dtr uninstall
+run ucp uninstall

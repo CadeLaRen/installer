@@ -2,6 +2,7 @@
 
 
 run () {
+	docker pull svendowideit/installer:$1
 	docker run --rm -it -v "/:/host" svendowideit/installer:$@
 }
 

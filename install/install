@@ -2,8 +2,24 @@
 
 set -e
 
-docker pull docker/ucp
-docker run --rm -it \
-	--name ucp \
-	-v "/var/run/docker.sock:/var/run/docker.sock" \
-	docker/ucp install $@
+PROFILE="/var/lib/boot2docker/profile"
+
+
+if ! grep -q "^DOCKER_HOST=\"-H tcp://0.0.0.0:2375\"$" /var/lib/boot2docker/profile ; then
+	echo "turn off DOCKER_HOST"
+	sed -i~ "s/^DOCKER_HOST=/#DOCKER_HOST=/" $PROFILE
+	echo "DOCKER_HOST=\"-H tcp://0.0.0.0:2375\"" >> $PROFILE
+else
+	echo "DOCKER_HOST already set off"
+fi
+
+if ! grep -q "^DOCKER_TLS=\"no\"$" /var/lib/boot2docker/profile ; then
+	echo "turn off DOCKER_TLS"
+	sed -i~ "s/^DOCKER_TLS=/#DOCKER_TLS=/" $PROFILE
+	echo "DOCKER_TLS=\"no\"" >> $PROFILE
+else
+	echo "DOCKER_TLS already set off"
+fi
+
+# TODO: make this into a generalized reusable command like install_run()
+docker run --rm -it -v "/:/host" docker-custom status

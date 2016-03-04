@@ -2,9 +2,5 @@
 
 set -e
 
-echo "UCP containers:"
-docker ps -a --format "{{.Image }} {{.Names}}" | grep ucp | sed "s/.* //"
+sh -c "$(docker run docker/trusted-registry status)"
 
-echo
-echo "UCP images"
-docker images -a --format "{{.Repository}}:{{.Tag}}" | grep ucp

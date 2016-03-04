@@ -1,9 +1,9 @@
-# svendowideit/installer:ucp
+# svendowideit/installer:nethack
 
-Install Docker UCP on your host.
+Install nethack on the __host__ OS
 
 To install, run:
 
 ```
-docker run --rm -v "/:/host" svendowideit/installer:ucp
+docker run --rm -v "/:/host" svendowideit/installer:nethack
 ```

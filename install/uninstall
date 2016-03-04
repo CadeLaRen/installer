@@ -2,8 +2,4 @@
 
 set -e
 
-docker pull docker/ucp
-docker run --rm -it \
-	--name ucp \
-	-v "/var/run/docker.sock:/var/run/docker.sock" \
-	docker/ucp uninstall  --interactive $@
+apt-get remove -yq nethack-console

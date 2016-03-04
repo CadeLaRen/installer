@@ -2,7 +2,7 @@
 
 set -e
 
-IMAGE="installer-ucp"
+IMAGE="installer-nethack"
 CONTAINER="$IMAGE-test"
 
 run() {

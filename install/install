@@ -2,9 +2,16 @@
 
 set -e
 
-docker pull docker/trusted-registry
+run () {
+	docker run --rm -v "/:/host" svendowideit/$@
+}
 
-INSTALL=$(docker run docker/trusted-registry install)
-echo "$INSTALL" | sh
+run ucp install
+run dtr install
+# the dtr install will fail, so we need to fix the conflicts and re-run
+run dtr set-admin-port 8443
+# TODO: can't remember the other setting needed
+run dtr install
 
-
+run ldap install
+run ldapui install

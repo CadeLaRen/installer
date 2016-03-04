@@ -2,7 +2,7 @@
 
 set -e
 
-IMAGE="installer-dtr"
+IMAGE="installer-ddc-in-one"
 CONTAINER="$IMAGE-test"
 
 run() {

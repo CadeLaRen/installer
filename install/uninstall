@@ -8,3 +8,7 @@ docker run --rm docker/trusted-registry stop | sh
 
 echo "delete containers"
 docker rm $(docker ps -a --format "{{ .Image }} {{ .Names }}" | grep trusted-registry | sed "s/.* //")
+
+echo "delete dtr cfg dir from host"
+rm -rf /usr/local/etc/dtr/
+rm -rf /var/local/dtr/

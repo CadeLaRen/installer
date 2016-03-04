@@ -16,6 +16,7 @@ echo "====== default DTR install"
 run dtr install || true
 
 # the dtr install will fail, so we need to fix the conflicts and re-run
+# move the sed hack into a dtr set command
 #run dtr set-admin-port 8443
 / # grep -r 443 /usr/local/etc/dtr/
 #/usr/local/etc/dtr/generatedConfigs/nginx.conf:      return 301 https://$host:443$request_uri;

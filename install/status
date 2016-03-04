@@ -2,9 +2,14 @@
 
 set -e
 
-echo "UCP containers:"
-docker ps -a --format "{{.Image }} {{.Names}}" | grep ucp | sed "s/.* //"
+echo
+uname -a
 
 echo
-echo "UCP images"
-docker images -a --format "{{.Repository}}:{{.Tag}}" | grep ucp
+echo "current daemon options:"
+echo "    $(ps aux | grep docker)"
+
+echo
+echo "current B2D profile file:"
+cat /var/lib/boot2docker/profile
+

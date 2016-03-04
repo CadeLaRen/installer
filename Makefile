@@ -1,6 +1,6 @@
 .PHONY: install
 
-IMAGE:=ucp-install
+IMAGE:=docker-custom
 CONTAINER:=$(IMAGE)-test
 
 # any target not explicitly listed is passed to the container run

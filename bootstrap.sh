@@ -24,6 +24,15 @@ fi
 # remove $CMD from argc
 shift
 
-cp -r /install /host/
+DIR=$(mktemp -d -p /host)
+cp -r /install/* $DIR
+
+# Need to know the tmpdir inside the chroot too
+HOSTDIR=$(echo $DIR | sed "s/\/host//")
 echo "entering host chroot running '$CMD $@'"
-exec chroot /host "$CMDLINE" $@
+
+# can't use exec, as we'd like to remove the temp dir from the host FS
+chroot /host "$HOSTDIR/$CMD" $@
+
+echo "cleaning up tmpdir"
+rm -r $DIR

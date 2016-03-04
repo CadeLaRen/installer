@@ -1,3 +1,5 @@
+.PHONY: install
+
 IMAGE:=ucp-install
 CONTAINER:=$(IMAGE)-test
 

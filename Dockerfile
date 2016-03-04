@@ -6,7 +6,6 @@ ADD install/ /install/
 
 # Sorry, I'm doing development on windows
 RUN chmod 755 /bootstrap.sh \
-	&& chmod 755 /install/* \
-	&& ls -al /install
+	&& chmod 755 /install/*
 
 ENTRYPOINT ["/bootstrap.sh"]

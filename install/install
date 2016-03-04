@@ -2,17 +2,6 @@
 
 set -e
 
-docker pull docker/ucp
+docker pull docker/trusted-registry
 
-# work out public IP address
-HOST_ADDRESS=""
-if uname -a | grep -q boot2docker; then
-	ADDRESS=$(docker run --rm --net=host alpine ip a show dev eth1 | grep "inet " | sed 's/.*inet \(.*\)\/24.*/\1/')
-	HOST_ADDRESS="--host-address $ADDRESS "
-	echo "adding $HOST_ADDRESS"
-fi
-
-docker run --rm -it \
-	--name ucp \
-	-v "/var/run/docker.sock:/var/run/docker.sock" \
-	docker/ucp install --swarm-port 3376 $HOST_ADDRESS $@
+sh -c "$(sudo docker run docker/trusted-registry install)"

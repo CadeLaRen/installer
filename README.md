@@ -18,3 +18,9 @@ Your Docker host will be set up to have
 5 A web server that has:
   * the info to simplify its use at a meetup
   * a slide deck
+6 remove the tcp socket Docker daemon port, and try putting an nginx redirect on 2375 and 2376 to the ucp port.
+
+
+## future
+
+stackfile / compose file to allow customization of the install params.

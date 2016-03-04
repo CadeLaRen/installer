@@ -8,13 +8,11 @@ run () {
 
 run ucp install
 
+mkdir -p /usr/local/etc/dtr/
 echo "load_balancer_https_port: 8443" >> /usr/local/etc/dtr/hub.yml
-
-echo "PRE"
 
 run dtr install || true
 
-echo "POST"
 # the dtr install will fail, so we need to fix the conflicts and re-run
 #run dtr set-admin-port 8443
 / # grep -r 443 /usr/local/etc/dtr/
@@ -22,9 +20,9 @@ echo "POST"
 #/usr/local/etc/dtr/generatedConfigs/nginx.conf:    listen 443 default ssl;
 #/usr/local/etc/dtr/generatedConfigs/stacker.yml:      443: 443
 #/usr/local/etc/dtr/hub.yml:load_balancer_https_port: 443
-sed -i~ 's/load_balancer_https_port:.*/load_balancer_https_port: 8443/g' /usr/local/etc/dtr/hub.yml
+#sed -i~ 's/load_balancer_https_port:.*/load_balancer_https_port: 8443/g' /usr/local/etc/dtr/hub.yml
 # TODO: can't remember the other setting needed
-run dtr install
+#run dtr install
 
-run ldap install
-run ldapui install
+#run ldap install
+#run ldapui install

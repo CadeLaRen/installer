@@ -1,9 +1,9 @@
-# svendowideit/installer:ucp
+# svendowideit/installer:DTR
 
-Install Docker UCP on your host.
+Install Docker DTR on your host.
 
 To install, run:
 
 ```
-docker run --rm -v "/:/host" svendowideit/installer:ucp
+docker run --rm -v "/:/host" svendowideit/installer:dtr install
 ```

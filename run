@@ -2,7 +2,7 @@
 
 set -e
 
-IMAGE="installer-ucp"
+IMAGE="installer-dtr"
 CONTAINER="$IMAGE-test"
 
 run() {

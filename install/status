@@ -2,9 +2,9 @@
 
 set -e
 
-echo "UCP containers:"
-docker ps -a --format "{{.Image }} {{.Names}}" | grep ucp | sed "s/.* //"
+echo "DTR containers:"
+docker ps -a --format "{{.Image }} {{.Names}}" | grep trusted-registry | sed "s/.* //"
 
 echo
-echo "UCP images"
-docker images -a --format "{{.Repository}}:{{.Tag}}" | grep ucp
+echo "DTR images"
+docker images -a --format "{{.Repository}}:{{.Tag}}" | grep trusted-registry

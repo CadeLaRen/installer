@@ -1,0 +1,46 @@
+#!/bin/sh
+
+set -e
+
+IMAGE="docker-custom"
+CONTAINER="$IMAGE-test"
+
+run() {
+	docker run --rm -it --name $CONTAINER -v "/:/host" $IMAGE $@
+}
+
+case "$1" in
+"build")
+	docker build -t $IMAGE .
+	;;
+"ps")
+	docker exec -it $CONTAINER ps aux
+	;;
+"exec")
+	docker exec -it $CONTAINER sh
+	;;
+"chroot")
+	docker run --rm -it \
+		--pid host \
+		--uts host \
+		--ipc host \
+		--net host \
+		-v "/:/host" \
+		--entrypoint chroot \
+		$IMAGE /host /bin/sh
+	;;
+"sh")
+	docker run --rm -it \
+		--pid host \
+		--uts host \
+		--ipc host \
+		--net host \
+		-v "/:/host" \
+		--entrypoint sh \
+		$IMAGE
+	;;
+*)
+	run $@
+esac
+
+exit $?

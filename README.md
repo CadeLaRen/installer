@@ -1,9 +1,26 @@
-# Installation in a container
+# Docker out of the box, install containers and host software using a Docker container
+
+One consistent commandline to install, configure and uninstall Docker containers, and Docker host
+software.
+
+For example:
+
+```
+docker run --rm -it -v "/:/host" installer/ucp
+docker run --rm -it -v "/:/host" installer/nethack uninstall
+docker run --rm -it -v "/:/host" installer/daemon-config config --disable TLS
+docker run --rm -it -v "/:/host" installer/ddc
+docker run --rm -it -v "/:/host" installer/dtr config --enable mirror
+```
+
+The `installer/ddc` image runs the `installer/ucp` and `installer/dtr` images,
+then configures them (and in future will also install and configure LDAP, Notary,
+and others.
 
 Instead of mounting `/var/run/docker.sock` and a `docker` client binary into an installer container,
 we can use `host` namespacing, and chroot into a bind-mount of the host root dir.
 
-## How to use it
+## How to build your own installer
 
 Once the installer image is on the hub, you'll be able to make your own installers by adding a Dockerfile
 to your project that looks like:
@@ -41,4 +58,4 @@ For example, `/install/test` would be run using `docker run --rm -v "/:/host" sv
 
 ### running mount -o rbind inside the container fails.
 
-hopefully due to the seccomp profile
+Hopefully due to the seccomp profile

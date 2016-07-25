@@ -185,6 +185,15 @@ Error response from daemon: network host not found
 
 BUT... once we have access to the host's docker socket, we should be able to create another container that does the job.
 
+So
+
+## SUCCESS
+
+I modified the `svendowideit/installer` base image's bootstrap.sh to restart the same image with the same parameters
+but adding `--net host` to the commandline if it detects that it hasn't been.
+
+and with that in place, I was able to upgrade from Docker 1.12.-rc3 to v1.12-rc4 using a single Swarm service command.
+
 ## Details
 
 The `svendowideit/update-swarm-installer` image is built using a very simple `Dockerfile`:

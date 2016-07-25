@@ -175,6 +175,16 @@ dpkg: error while cleaning up:
 
 So we've had some issue contacting the host's DBus - yeah, I need to fix that in the installer startup :/
 
+I think this needs the containers to be started in the host's network namespace, which it __looks__ like
+I can't do directly:
+
+```
+ubuntu@n3:~$ docker service create --name update --restart-condition=none --replicas=6 --network host --mount source=/,target=/host,type=bind svendowideit/update-swarm-installer
+Error response from daemon: network host not found
+```
+
+BUT... once we have access to the host's docker socket, we should be able to create another container that does the job.
+
 ## Details
 
 The `svendowideit/update-swarm-installer` image is built using a very simple `Dockerfile`:

@@ -12,7 +12,8 @@ CONTAINERNAME=`cat /etc/hostname`
 HOSTNAME=`cat /host/etc/hostname`
 #echo "test $HOSTNAME vs $CONTAINERNAME"
 # have to assume the hostname == containername, so we can use `docker inspect`
-IMAGENAME=`chroot /host docker inspect --format "{{ .Config.Image }}" $(hostname)`
+echo "trying to get image running using $(hostname)"
+IMAGENAME=`chroot /host docker inspect --format "{{ .Config.Image }}" $(hostname) || true`
 echo "test $IMAGENAME"
 #if [[ "$HOSTNAME" != "$CONTAINERNAME" ]]; then
 if [[ "$IMAGENAME" != "" ]]; then

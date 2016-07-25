@@ -10,9 +10,10 @@ fi
 # make sure we have the --network host
 CONTAINERNAME=`cat /etc/hostname`
 HOSTNAME=`cat /host/etc/hostname`
-echo "test $HOSTNAME vs $CONTAINERNAME"
+#echo "test $HOSTNAME vs $CONTAINERNAME"
 # have to assume the hostname == containername, so we can use `docker inspect`
 IMAGENAME=`chroot /host docker inspect --format "{{ .Config.Image }}" $(hostname)`
+echo "test $IMAGENAME"
 #if [[ "$HOSTNAME" != "$CONTAINERNAME" ]]; then
 if [[ "$IMAGENAME" != "" ]]; then
 	# TODO: if we have a tty or not (and then add -it)

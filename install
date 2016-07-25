@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+apt-get update
+apt-get dist-upgrade -yq
+apt-get install vim-tiny -yq
+
+#finished - this will sit there so `docker service tasks update` can be useful
+tail -f /etc/hostname

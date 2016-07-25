@@ -1,61 +1,42 @@
-# Docker out of the box, install containers and host software using a Docker container
 
-One consistent commandline to install, configure and uninstall Docker containers, and Docker host
-software.
 
-For example:
+# Use a Docker Swarm service to upgrade, update or configuration manage your Swarm hosts.
 
-```
-docker run --rm -it -v "/:/host" installer/ucp
-docker run --rm -it -v "/:/host" installer/nethack uninstall
-docker run --rm -it -v "/:/host" installer/daemon-config config --disable TLS
-docker run --rm -it -v "/:/host" installer/ddc
-docker run --rm -it -v "/:/host" installer/dtr config --enable mirror
-```
+Its possible to use a `docker service` to update _all_ the hosts in your Swarm.
 
-The `installer/ddc` image runs the `installer/ucp` and `installer/dtr` images,
-then configures them (and in future will also install and configure LDAP, Notary,
-and others.
+If you've planned ahead, you may have added `list-restore: true` to your `/etc/docker/daemon.json` - and so you'll experience magic when there's a new Docker Engine update too.
 
-Instead of mounting `/var/run/docker.sock` and a `docker` client binary into an installer container,
-we can use `host` namespacing, and chroot into a bind-mount of the host root dir.
+I've made an image on the hub called `svendowideit/update-swarm-installer` which will (er, Debian example) update all your installed debian packages, and then install `vim-tiny`.
 
-## How to build your own installer
+Assuming you have 6 swarm nodes, and your managers havn't been set up drained (ie, no containers will be started on them), you can run the following:
 
-Once the installer image is on the hub, you'll be able to make your own installers by adding a Dockerfile
-to your project that looks like:
+	docker service create --name update --restart-condition=none --replicas=6 --mount source=/,target=/host,type=bind,writable=true svendowideit/update-swarm-installer
+
+This will tell Docker Swarm to start the image 6 times (ie, one on each host) once, and only once.
+
+The `--mount source=/,target=/host,type=bind,writable=true` gives the container access to the node's host filesystem - and then the "installer" base image takes over.
+
+## Details
+
+The `svendowideit/update-swarm-installer` image is built using a very simple `Dockerfile`:
 
 ```
 FROM svendowideit/installer
-MAINTAINER You <You@your.org>
-
+MAINTAINER Sven Dowideit <SvenDowideit@home.org.au>
 ADD install /install/install
 ```
 
-And then write an `/install/install` script or executable that runs whatever you need to run on the host you're installing on.
+and the "install" script is exactly the commands we'd like to run on each host, plus something that will stop the container from existing - allowing me to demonstrate the creation of the containers.
 
 ```
 #!/bin/sh
 
 set -e
 
-apt-get install stuff
+apt-get update
+apt-get dist-upgrade -yq
+apt-get install vim-tiny -yq
 
-docker pull someimages
-
-wget https://your.org/docker-compose.yml
-
-docker-compose up
+#finished - this will sit there so `docker service tasks update` can be useful
+tail -f /etc/hostname
 ```
-
-You can also over-ride `/install/help`, which will output whenever the installer container fails to
-find a matching script, or is missing some cmdline options.
-
-You can add more commands, such as `uninstall`, `test` etc by adding more scripts into the `/install` directory. 
-For example, `/install/test` would be run using `docker run --rm -v "/:/host" svendowideit/installer test`.
-
-## Interesting results
-
-### running mount -o rbind inside the container fails.
-
-Hopefully due to the seccomp profile

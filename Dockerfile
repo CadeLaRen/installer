@@ -1,11 +1,4 @@
-FROM alpine
+FROM svendowideit/installer
 MAINTAINER Sven Dowideit <SvenDowideit@home.org.au>
 
-ADD bootstrap.sh /
-ADD install/ /install/
-
-# Sorry, I'm doing development on windows
-RUN chmod 755 /bootstrap.sh \
-	&& chmod 755 /install/*
-
-ENTRYPOINT ["/bootstrap.sh"]
+ADD install /install/install

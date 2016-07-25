@@ -1,8 +1,0 @@
-#!/bin/sh
-
-
-echo "delete stopped containers"
-docker rm $(docker ps -aq) || true
-
-echo "delete dangline images"
-docker rmi $(docker images -q --filter dangling=true)

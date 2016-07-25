@@ -17,6 +17,7 @@ if [[ "$HOSTNAME" != "$CONTAINERNAME" ]]; then
 
 	# TODO: I wonder if there's a way to detect if we have a tty or not
 	echo "Adding --net host to startup of $IMAGENAME"
+	chroot /host docker pull $IMAGENAME
 	chroot /host docker run --net host -v /:/host --rm $IMAGENAME $@
 else
 	CMD="$1"

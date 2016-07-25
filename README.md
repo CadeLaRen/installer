@@ -194,6 +194,54 @@ but adding `--net host` to the commandline if it detects that it hasn't been.
 
 and with that in place, I was able to upgrade from Docker 1.12.-rc3 to v1.12-rc4 using a single Swarm service command.
 
+_and_ I also changed to using a `--mode=global` service to ensure that I'm running one update task per node:
+
+```
+ubuntu@n3:~$ docker service rm update
+ubuntu@n3:~$ docker service create --name update --restart-condition=none --mode=global  --mount source=/,target=/host,type=bind svendowideit/update-swarm-installer
+5llw2izg855gvmjp09cmypbeq
+ubuntu@n3:~$ docker service tasks update
+ID                         NAME    SERVICE  IMAGE                                LAST STATE              DESIRED STATE  NODE
+1wql23wcgm2mb0hznq0t9zgdw  update  update   svendowideit/update-swarm-installer  Running 15 seconds ago  Running        n6.fi.gy
+ev0o6vjmeydxqu84re1j6bxj1  update  update   svendowideit/update-swarm-installer  Running 15 seconds ago  Running        ip-172-31-41-85
+0pvjmjuowiwphjxfsrnyiw20a  update  update   svendowideit/update-swarm-installer  Running 15 seconds ago  Running        n4.fi.gy
+1r67tf4cote9xhpfwg9jzermc  update  update   svendowideit/update-swarm-installer  Running 15 seconds ago  Running        n7.fi.gy
+0tghwwsj5cd3iw1332q305rqw  update  update   svendowideit/update-swarm-installer  Running 15 seconds ago  Running        n3.fi.gy
+ubuntu@n3:~$ docker ps
+CONTAINER ID        IMAGE                                        COMMAND                  CREATED             STATUS              PORTS               NAMES
+dd8ddb7c096a        svendowideit/update-swarm-installer:latest   "/bootstrap.sh"          9 seconds ago       Up 8 seconds                            ecstatic_perlman
+e430c93ced85        svendowideit/update-swarm-installer:latest   "/bootstrap.sh"          12 seconds ago      Up 11 seconds                           update.0.0tghwwsj5cd3iw1332q305rqw
+f2e92a04f377        nginx:latest                                 "nginx -g 'daemon off"   About an hour ago   Up About an hour    80/tcp, 443/tcp     web.4.4nf18i6i1o3ww5wnp2bvfj4pq
+fd68d993026e        nginx:latest                                 "nginx -g 'daemon off"   About an hour ago   Up About an hour    80/tcp, 443/tcp     web.10.3j0o9c3fguhiwu3swts587cmi
+ac41db029764        nginx:latest                                 "nginx -g 'daemon off"   About an hour ago   Up About an hour    80/tcp, 443/tcp     web.8.e1jsn8c7717sts8fndmerbnjz
+b80eb2c72e0b        nginx:latest                                 "nginx -g 'daemon off"   About an hour ago   Up About an hour    80/tcp, 443/tcp     web.7.3ppb58u5jkz8kzhzugn6zegnr
+e8293fc9e2a0        nginx:latest                                 "nginx -g 'daemon off"   About an hour ago   Up About an hour    80/tcp, 443/tcp     web.5.6jo30vg21527hp7zpx32ohuep
+bdc7caf16d57        nginx:latest                                 "nginx -g 'daemon off"   About an hour ago   Up About an hour    80/tcp, 443/tcp     web.9.a92dajrgehprf08973l64yfnt
+13b470eef0d0        nginx:latest                                 "nginx -g 'daemon off"   About an hour ago   Up About an hour    80/tcp, 443/tcp     web.1.b81vm64fwpp0dxdmvznnvrl9h
+ubuntu@n3:~$ docker logs update.0.0tghwwsj5cd3iw1332q305rqw
+trying to get image running using e430c93ced85
+test svendowideit/update-swarm-installer:latest
+Adding --net host to startup of svendowideit/update-swarm-installer:latest 
+latest: Pulling from svendowideit/update-swarm-installer
+Digest: sha256:9b869172e1c2da3bbfa0693a19838c15d19278f6d954bfda77cd49fad39a3da3
+Status: Image is up to date for svendowideit/update-swarm-installer:latest
+trying to get image running using n3.fi.gy
+Error: No such image, container or task: n3.fi.gy
+test 
+entering host chroot running 'install '
+Ign http://ap-southeast-2.ec2.archive.ubuntu.com trusty InRelease
+Get:1 http://ap-southeast-2.ec2.archive.ubuntu.com trusty-updates InRelease [65.9 kB]
+Hit http://ap-southeast-2.ec2.archive.ubuntu.com trusty-backports InRelease
+Hit http://ap-southeast-2.ec2.archive.ubuntu.com trusty Release.gpg
+Hit http://ap-southeast-2.ec2.archive.ubuntu.com trusty Release
+...
+
+```
+
+All the nodes now have an `update` task sitting, waiting to be killed (allowing you to review the (er, some?) of the log output.
+
+You can also see that the `update.0.0tghwwsj5cd3iw1332q305rqw` container, started by swarm, then started a child to add `--net=host` so that the services can be restarted.
+
 ## Details
 
 The `svendowideit/update-swarm-installer` image is built using a very simple `Dockerfile`:

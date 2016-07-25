@@ -11,12 +11,12 @@ fi
 CONTAINERNAME=`cat /etc/hostname`
 HOSTNAME=`cat /host/etc/hostname`
 echo "test $HOSTNAME vs $CONTAINERNAME"
-if [[ "$HOSTNAME" != "$CONTAINERNAME" ]]; then
-	# have to assume the hostname == containername, so we can use `docker inspect`
-	IMAGENAME=`chroot /host docker inspect --format "{{ .Config.Image }}" $(hostname)`
-
-	# TODO: I wonder if there's a way to detect if we have a tty or not
-	echo "Adding --net host to startup of $IMAGENAME"
+# have to assume the hostname == containername, so we can use `docker inspect`
+IMAGENAME=`chroot /host docker inspect --format "{{ .Config.Image }}" $(hostname)`
+#if [[ "$HOSTNAME" != "$CONTAINERNAME" ]]; then
+if [[ "$IMAGENAME" != "" ]]; then
+	# TODO: if we have a tty or not (and then add -it)
+	echo "Adding --net host to startup of $IMAGENAME $@"
 	chroot /host docker pull $IMAGENAME
 	chroot /host docker run --net host -v /:/host --rm $IMAGENAME $@
 else

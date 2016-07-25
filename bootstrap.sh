@@ -16,7 +16,9 @@ if [[ "$HOSTNAME" != "$CONTAINERNAME" ]]; then
 	# have to assume the hostname == containername, so we can use `docker inspect`
 	IMAGENAME=`chroot /host docker inspect --format "{{ .Config.Image }}" $(hostname)`
 
-	chroot /host docker run --net host -v /:/host --rm -it $IMAGENAME $@
+	# TODO: I wonder if there's a way to detect if we have a tty or not
+
+	chroot /host docker run --net host -v /:/host --rm $IMAGENAME $@
 else
 	CMD="$1"
 	if [[ -z $CMD ]]; then
